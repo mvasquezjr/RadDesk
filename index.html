@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RadDesk</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="saveToast" class="save-toast" role="status" aria-live="polite">
+    <span class="save-toast-dot"></span>
+    <span>Changes saved</span>
+  </div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">R</div>
+        <div>
+          <h1>RadDesk</h1>
+          <p>Radiography Student Toolkit</p>
+        </div>
+      </div>
+
+      <nav class="nav" id="toolNav">
+        <button class="nav-item active" data-tool="dashboard"><span class="nav-icon">⌂</span><span>Dashboard</span></button>
+        <button class="nav-item" data-tool="exposure"><span class="nav-icon">◫</span><span>Exposure Playground</span></button>
+        <button class="nav-item" data-tool="cause-effect"><span class="nav-icon">⇄</span><span>Cause → Effect</span></button>
+        <button class="nav-item" data-tool="formula"><span class="nav-icon">ƒ</span><span>Formula Solver</span></button>
+        <button class="nav-item" data-tool="positioning"><span class="nav-icon">⌖</span><span>Positioning Reference</span></button>
+        <button class="nav-item" data-tool="troubleshooter"><span class="nav-icon">⚠</span><span>Image Troubleshooter</span></button>
+        <button class="nav-item" data-tool="terminology"><span class="nav-icon">Aa</span><span>Terminology</span></button>
+        <button class="nav-item" data-tool="abbreviations"><span class="nav-icon">Ab</span><span>Abbreviations</span></button>
+        <button class="nav-item" data-tool="articles"><span class="nav-icon">▤</span><span>Learning Library</span></button>
+        <button class="nav-item" data-tool="scratchpad"><span class="nav-icon">✎</span><span>Scratchpad</span></button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="save-indicator"><span class="save-dot"></span><span id="saveStatus" class="save-status">Saved</span></div>
+        <button id="saveAllBtn" class="primary-btn full">Save Changes</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="welcome-banner" role="status">Welcome Dareyli</div>
+
+      <header class="topbar">
+        <div>
+          <h2 id="pageTitle">Dashboard</h2>
+          <p id="pageSubtitle">Quick access to your radiography study tools.</p>
+        </div>
+        <div class="global-search-wrap">
+          <button id="globalSearchBtn" class="global-search-trigger" type="button">
+            <span>⌕</span><span>Search all RadDesk</span><kbd>Ctrl K</kbd>
+          </button>
+        </div>
+        <div class="top-actions">
+          <button id="resetBtn" class="ghost-btn">Reset Current Tool</button>
+          <button id="saveTopBtn" class="primary-btn"><span>Save</span><span class="button-key">⌘S</span></button>
+        </div>
+      </header>
+
+      <section id="dashboard" class="tool-panel active">
+        <div class="hero-card">
+          <div>
+            <span class="eyebrow">Student Workspace</span>
+            <h3>One place for the calculations, relationships, references, and notes you use in class.</h3>
+            <p>All values and notes are saved in your browser automatically. Use the Save button whenever you want an explicit checkpoint.</p>
+          </div>
+          <div class="status-card">
+            <span>Storage</span>
+            <strong>Local browser save</strong>
+            <small>No account required</small>
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <button class="tool-card" data-open="exposure">
+            <span class="tool-number">01</span>
+            <h4>Exposure Playground</h4>
+            <p>Change kVp, mA, time, SID, and OID and immediately see the expected relationships.</p>
+          </button>
+          <button class="tool-card" data-open="cause-effect">
+            <span class="tool-number">02</span>
+            <h4>Cause → Effect</h4>
+            <p>Select a variable and direction of change to see downstream effects.</p>
+          </button>
+          <button class="tool-card" data-open="formula">
+            <span class="tool-number">03</span>
+            <h4>Formula Solver</h4>
+            <p>Solve common radiography equations and show the working steps.</p>
+          </button>
+          <button class="tool-card" data-open="positioning">
+            <span class="tool-number">04</span>
+            <h4>Positioning Reference</h4>
+            <p>Fast access to common positioning parameters and reminders.</p>
+          </button>
+          <button class="tool-card" data-open="terminology">
+            <span class="tool-number">05</span>
+            <h4>Terminology</h4>
+            <p>Simple explanations of common radiography terms.</p>
+          </button>
+          <button class="tool-card" data-open="scratchpad">
+            <span class="tool-number">06</span>
+            <h4>Scratchpad</h4>
+            <p>Keep quick calculations and class notes beside your tools.</p>
+          </button>
+        </div>
+
+        <div class="dashboard-secondary">
+          <section class="panel-card dashboard-list-card">
+            <div class="section-heading"><div><span class="eyebrow">Pinned</span><h3>Favorites</h3></div></div>
+            <div id="favoritesList" class="dashboard-mini-list"><div class="empty-state compact">Star references to pin them here.</div></div>
+          </section>
+          <section class="panel-card dashboard-list-card">
+            <div class="section-heading"><div><span class="eyebrow">History</span><h3>Recently Viewed</h3></div></div>
+            <div id="recentList" class="dashboard-mini-list"><div class="empty-state compact">Items you open will appear here.</div></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="exposure" class="tool-panel">
+        <div class="split-layout">
+          <div class="panel-card">
+            <div class="section-heading">
+              <div>
+                <span class="eyebrow">Interactive</span>
+                <h3>Exposure Playground</h3>
+              </div>
+              <span class="pill">Live relationships</span>
+            </div>
+
+            <div class="control-stack">
+              <div class="control-row">
+                <div class="control-label"><label for="kvp">kVp</label><span id="kvpValue">80</span></div>
+                <input id="kvp" type="range" min="40" max="150" step="1" value="80" />
+                <input id="kvpNumber" type="number" min="40" max="150" step="1" value="80" />
+              </div>
+              <div class="control-row">
+                <div class="control-label"><label for="ma">mA</label><span id="maValue">200</span></div>
+                <input id="ma" type="range" min="25" max="1000" step="25" value="200" />
+                <input id="maNumber" type="number" min="25" max="1000" step="25" value="200" />
+              </div>
+              <div class="control-row">
+                <div class="control-label"><label for="time">Time (s)</label><span id="timeValue">0.10</span></div>
+                <input id="time" type="range" min="0.01" max="1" step="0.01" value="0.10" />
+                <input id="timeNumber" type="number" min="0.01" max="1" step="0.01" value="0.10" />
+              </div>
+              <div class="control-row">
+                <div class="control-label"><label for="sid">SID (in)</label><span id="sidValue">40</span></div>
+                <input id="sid" type="range" min="20" max="80" step="1" value="40" />
+                <input id="sidNumber" type="number" min="20" max="80" step="1" value="40" />
+              </div>
+              <div class="control-row">
+                <div class="control-label"><label for="oid">OID (in)</label><span id="oidValue">2</span></div>
+                <input id="oid" type="range" min="0" max="20" step="0.5" value="2" />
+                <input id="oidNumber" type="number" min="0" max="20" step="0.5" value="2" />
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-card result-card">
+            <span class="eyebrow">Calculated</span>
+            <div class="metric-grid">
+              <div class="metric"><span>mAs</span><strong id="masResult">20.00</strong></div>
+              <div class="metric"><span>Relative intensity</span><strong id="intensityResult">1.00×</strong></div>
+              <div class="metric"><span>Magnification factor</span><strong id="magnificationResult">1.05×</strong></div>
+              <div class="metric"><span>Estimated SOD</span><strong id="sodResult">38.0 in</strong></div>
+            </div>
+
+            <div class="relationship-box">
+              <h4>Relationship Summary</h4>
+              <div id="relationshipSummary" class="relationship-list"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cause-effect" class="tool-panel">
+        <div class="panel-card narrow-card">
+          <div class="section-heading">
+            <div><span class="eyebrow">Concept utility</span><h3>Cause → Effect</h3></div>
+          </div>
+          <div class="form-grid two">
+            <label>Variable
+              <select id="ceVariable">
+                <option value="kvp">kVp</option>
+                <option value="mas">mAs</option>
+                <option value="sid">SID</option>
+                <option value="oid">OID</option>
+              </select>
+            </label>
+            <label>Change
+              <select id="ceDirection">
+                <option value="increase">Increase</option>
+                <option value="decrease">Decrease</option>
+              </select>
+            </label>
+          </div>
+          <div id="causeEffectOutput" class="effect-chain"></div>
+        </div>
+      </section>
+
+      <section id="formula" class="tool-panel">
+        <div class="split-layout">
+          <div class="panel-card">
+            <div class="section-heading"><div><span class="eyebrow">Calculator</span><h3>Formula Solver</h3></div></div>
+            <label>Formula
+              <select id="formulaType">
+                <option value="inverseSquare">Inverse Square Law</option>
+                <option value="mas">mAs</option>
+                <option value="magnification">Magnification Factor</option>
+                <option value="fifteen">15% Rule</option>
+              </select>
+            </label>
+            <div id="formulaInputs" class="formula-inputs"></div>
+            <button id="solveFormulaBtn" class="primary-btn">Solve</button>
+          </div>
+          <div class="panel-card result-card">
+            <span class="eyebrow">Result</span>
+            <div id="formulaResult" class="formula-result">Choose values and press Solve.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="positioning" class="tool-panel">
+        <div class="panel-card">
+          <div class="section-heading library-heading">
+            <div>
+              <span class="eyebrow">Clinical study reference</span>
+              <h3>Positioning Reference</h3>
+              <p class="section-copy">Search core radiographic projections by body region, projection, CR, landmark, evaluation criteria, or common pitfall.</p>
+            </div>
+            <span id="positionCount" class="pill">0 projections</span>
+          </div>
+          <div class="library-controls">
+            <div class="search-row library-search">
+              <input id="positionSearch" type="search" placeholder="Search PA chest, mortise, T7, femoral neck, decubitus..." />
+            </div>
+            <label class="category-filter">Body region
+              <select id="positionCategory"><option>All</option></select>
+            </label>
+          </div>
+          <div class="clinical-disclaimer">Educational quick reference only. Exact centering, angles, SID, breathing instructions, and trauma adaptations can vary by school, equipment, patient condition, radiologist preference, and facility protocol.</div>
+          <div id="positionList" class="position-grid"></div>
+        </div>
+      </section>
+
+
+      <section id="troubleshooter" class="tool-panel">
+        <div class="panel-card">
+          <div class="section-heading library-heading">
+            <div>
+              <span class="eyebrow">Image critique assistant</span>
+              <h3>Radiograph Troubleshooter</h3>
+              <p class="section-copy">Choose what looks wrong. RadDesk gives likely causes, what to check, and what principle usually corrects the problem.</p>
+            </div>
+            <span class="pill">Technique + positioning</span>
+          </div>
+          <div class="trouble-controls">
+            <div class="search-row library-search"><input id="troubleSearch" type="search" placeholder="Search noise, grid cutoff, rotation, clipped anatomy..." /></div>
+            <label class="category-filter">Problem type
+              <select id="troubleCategory"><option>All</option></select>
+            </label>
+          </div>
+          <div id="troubleList" class="trouble-grid"></div>
+        </div>
+      </section>
+
+<section id="terminology" class="tool-panel">
+        <div class="panel-card">
+          <div class="section-heading"><div><span class="eyebrow">Reference</span><h3>Terminology</h3></div></div>
+          <div class="search-row">
+            <input id="termSearch" type="search" placeholder="Search terms, concepts, modalities, or categories..." />
+          </div>
+          <div id="termList" class="reference-grid"></div>
+        </div>
+      </section>
+
+      <section id="abbreviations" class="tool-panel">
+        <div class="panel-card">
+          <div class="section-heading"><div><span class="eyebrow">Comprehensive reference</span><h3>Abbreviations</h3><p class="section-copy">Search positioning, anatomy, patient care, dose, digital imaging, CT, MRI, ultrasound, nuclear medicine, organizations, and clinical shorthand.</p></div><span class="pill">308 entries</span></div>
+          <div class="search-row">
+            <input id="abbrSearch" type="search" placeholder="Search SID, OID, DICOM, CTDIvol, FLAIR, PICC..." />
+          </div>
+          <div id="abbrList" class="reference-grid"></div>
+        </div>
+      </section>
+
+
+      <section id="articles" class="tool-panel">
+        <div class="panel-card">
+          <div class="section-heading library-heading">
+            <div>
+              <span class="eyebrow">Curated study resources</span>
+              <h3>Learning Library</h3>
+              <p class="section-copy">100 hand-picked educational articles and reference pages from established radiology, medical-imaging, and radiation-safety organizations. Search across titles, topics, summaries, sources, and tags.</p>
+            </div>
+            <span id="articleCount" class="pill">100 resources</span>
+          </div>
+          <div class="library-controls">
+            <div class="search-row library-search">
+              <input id="articleSearch" type="search" placeholder="Search chest x-ray, kVp, CT dose, positioning, MRI safety, contrast..." />
+            </div>
+            <label class="category-filter">Category
+              <select id="articleCategory"><option>All</option></select>
+            </label>
+          </div>
+          <div class="library-note">
+            <strong>How this library works:</strong> RadDesk indexes the title, topic, source, and an original study summary. Selecting a resource opens the publisher's original page in a new tab.
+          </div>
+          <div id="articleList" class="article-grid"></div>
+        </div>
+      </section>
+
+      <section id="scratchpad" class="tool-panel">
+        <div class="panel-card scratch-card">
+          <div class="section-heading">
+            <div><span class="eyebrow">Autosaved</span><h3>Scratchpad</h3></div>
+            <span id="noteCount" class="pill">0 characters</span>
+          </div>
+          <textarea id="scratchpadText" placeholder="Type class notes, formulas, reminders, or quick calculations here..."></textarea>
+        </div>
+      </section>
+
+      <footer class="site-credit">Made by yours truly Anthony</footer>
+    </main>
+  </div>
+
+
+  <div id="globalSearchOverlay" class="search-overlay" aria-hidden="true">
+    <div class="search-command" role="dialog" aria-modal="true" aria-label="Search RadDesk">
+      <div class="command-input-row">
+        <span class="command-icon">⌕</span>
+        <input id="globalSearchInput" type="search" autocomplete="off" placeholder="Search every tool, term, abbreviation, projection, and article..." />
+        <button id="closeGlobalSearch" class="icon-btn" aria-label="Close search">×</button>
+      </div>
+      <div class="command-hint">Try “SID”, “PA chest”, “grid cutoff”, “MRI safety”, “kVp”, or “pneumothorax”.</div>
+      <div id="globalSearchResults" class="global-results"></div>
+    </div>
+  </div>
+
+  <script src="reference-data.js"></script>
+  <script src="student-tools-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
